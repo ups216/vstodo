@@ -48,7 +48,7 @@ const main = async () => {
           });
         }
         cb(null, {
-          accessToken: jwt.sign({ userId: user.id }, "1121asdfasdf", {
+          accessToken: jwt.sign({ userId: user.id }, process.env.JWT_KEY, {
             expiresIn: "1y",
           }),
         });
