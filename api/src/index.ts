@@ -66,7 +66,7 @@ const main = async () => {
     }),
     function (req: any, res) {
       // Successful authentication, redirect home.
-      //res.send(req.user.accessToken);
+      // res.send(req.user.accessToken);
       res.redirect(`http://localhost:54321/auth/${req.user.accessToken}`);
     }
   );

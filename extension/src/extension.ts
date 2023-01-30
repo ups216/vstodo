@@ -1,8 +1,11 @@
 import * as vscode from "vscode";
+import { authenticate } from "./authenticate";
 import { HelloWorldPanel } from "./HelloWorldPanel";
 import { SidebarProvider } from "./SidebarProvider";
+import { TokenManager } from "./TokenManager";
 
 export function activate(context: vscode.ExtensionContext) {
+  TokenManager.globalState = context.globalState;
   const sidebarProvider = new SidebarProvider(context.extensionUri);
 
   const item = vscode.window.createStatusBarItem(
@@ -40,6 +43,15 @@ export function activate(context: vscode.ExtensionContext) {
         type: "new-todo",
         value: text,
       });
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("vstodo.authenticate", () => {
+      vscode.window.showInformationMessage(
+        "Token value is " + TokenManager.getToken()
+      );
+      authenticate();
     })
   );
 
