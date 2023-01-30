@@ -10,12 +10,20 @@
       "type": "extensionHost",
       "request": "launch",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
-      "outFiles": ["${workspaceFolder}/extension/dist/**/*.js"]
+      "outFiles": ["${workspaceFolder}/extension/dist/**/*.js"],
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/extension/**",
+        "!**/node_modules/**"
+      ]
     },
     {
       "name": "Extension Tests",
       "type": "extensionHost",
       "request": "launch",
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/extension/**",
+        "!**/node_modules/**"
+      ],
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/extension/",
         "--extensionTestsPath=${workspaceFolder}/extension/out/test/suite/index"

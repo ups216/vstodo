@@ -1,9 +1,13 @@
 <script lang="ts">
-    import { onMount } from 'svelte';  
+    import { onMount } from 'svelte';
+
     let todos: Array<{text: string, completed: boolean}> = [];
     let text = '';
+    let loading = true;
+    let user: {name:string; id: number} | null = null;
 
-    onMount(() => {
+    onMount(async () => {
+
        window.addEventListener('message', event => {
            const message = event.data;
            console.log({message});
@@ -19,6 +23,15 @@
                    break;
            }
        });
+
+       const response = await fetch(`${apiBaseUrl}/me`, {
+              headers: {
+                'Authorization': `Bearer ${accessToken}`
+              }
+       });
+       const data = await response.json();
+       user = data.user;
+       loading = false;
     });
 
 </script>
@@ -28,6 +41,14 @@
         text-decoration: line-through;
     }
 </style>
+{#if loading}
+    <div>loading...</div>
+{:else if user}
+    <pre>{JSON.stringify(user, null, 2)}</pre>
+{:else}
+    <div>no user is logged in</div>
+{/if}
+
 <form on:submit|preventDefault={() => {
     todos = [{text, completed: false},...todos];
     text = '';
