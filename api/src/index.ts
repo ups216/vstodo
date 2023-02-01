@@ -15,6 +15,8 @@ const main = async () => {
     type: "postgres",
     database: "vstodo",
     dropSchema: true,
+    password: "postgres",
+    username: "postgres",
     entities: [join(__dirname, "./entities/*.*")],
     logging: !__prod__,
     synchronize: !__prod__,
@@ -47,7 +49,7 @@ const main = async () => {
           user = await User.create({
             name: profile.displayName,
             githubId: profile.id,
-          });
+          }).save();
         }
         cb(null, {
           accessToken: jwt.sign({ userId: user.id }, process.env.JWT_KEY, {
@@ -75,12 +77,14 @@ const main = async () => {
 
   app.get("/me", async (req, res) => {
     const authHeader = req.headers.authorization;
+    console.log(`authHeader ${authHeader}`)
     if (!authHeader) {
       res.send({ user: null });
       return;
     }
 
     const token = authHeader.split(" ")[1];
+    console.log(`token ${token}`)
     if (!token) {
       res.send({ user: null });
       return;
@@ -90,7 +94,9 @@ const main = async () => {
 
     try {
       const payload: any = jwt.verify(token, process.env.JWT_KEY);
+      console.log(`payload ${payload}`);
       userId = payload.userId;
+      console.log(`UserId ${userId}`);
     } catch {
       res.send({ user: null });
       return;
@@ -101,7 +107,7 @@ const main = async () => {
       return;
     }
 
-    const user = await User.findOneBy({ id: userId as any });
+    const user = await User.findOne(userId);
     console.log(`user ${user}`);
 
     res.send({ user });

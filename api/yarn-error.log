@@ -1,0 +1,61 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\leixu\AppData\Local\node\corepack\yarn\1.22.19\bin\yarn.js
+
+PATH: 
+  C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\PuTTY\;C:\Program Files\Git\cmd;D:\tools\java\jdk-19.0.1\bin;D:\tools\java\jdk-19.0.1\jre\bin;D:\tools\java\apache-maven-3.8.6\bin;D:\tools\k9s;C:\Program Files\Go\bin;C:\Program Files (x86)\SmartIDE\;D:\tools;C:\Program Files\Docker\Docker\resources\bin;C:\Users\leixu\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\leixu\AppData\Local\Microsoft\WindowsApps;C:\Program Files\JetBrains\JetBrains Gateway 2022.2.4\bin;C:\Users\leixu\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\leixu\AppData\Roaming\npm;C:\Users\leixu\AppData\Local\JetBrains\Toolbox\scripts;C:\Users\leixu\go\bin;C:\Users\leixu\AppData\Roaming\nvm;C:\Program Files\nodejs
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  14.21.2
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: read ECONNRESET
+      at TLSWrap.onStreamRead (internal/stream_base_commons.js:209:20)
+
+npm manifest: 
+  {
+    "name": "vstodo-api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "watch": "tsc -w",
+      "dev": "nodemon dist/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "cors": "^2.8.5",
+      "dotenv-safe": "^8.2.0",
+      "express": "^4.18.2",
+      "jsonwebtoken": "^9.0.0",
+      "passport": "^0.6.0",
+      "passport-github": "^1.1.0",
+      "pg": "^8.9.0",
+      "polka": "^0.5.2",
+      "reflect-metadata": "^0.1.13",
+      "typeorm": "^0.3.11"
+    },
+    "devDependencies": {
+      "@types/cors": "^2.8.13",
+      "@types/express": "^4.17.16",
+      "@types/jsonwebtoken": "^9.0.1",
+      "@types/node": "^18.11.18",
+      "@types/passport": "^1.0.11",
+      "@types/passport-github": "^1.1.7",
+      "nodemon": "^2.0.20",
+      "typescript": "^4.9.4"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
