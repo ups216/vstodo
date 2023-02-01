@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { authenticate } from "./authenticate";
 import { apiBaseUrl } from "./constants";
 import { getNonce } from "./getNonce";
 import { TokenManager } from "./TokenManager";
@@ -23,6 +24,18 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
+        case 'doLogout': {
+          TokenManager.deleteToken();
+          break;
+        }
+        case 'doGitHubLogin': {
+          authenticate();
+          webviewView.webview.postMessage({
+            type: "user-authenticated",
+            value: TokenManager.getToken(),
+          });
+          break;          
+        }
         case "onInfo": {
           if (!data.value) {
             return;

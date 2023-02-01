@@ -52,6 +52,10 @@ export function activate(context: vscode.ExtensionContext) {
         "Token value is " + TokenManager.getToken()
       );
       authenticate();
+      sidebarProvider._view?.webview.postMessage({
+        type: "user-authenticated",
+        value: TokenManager.getToken(),
+      });
     })
   );
 

@@ -1,6 +1,8 @@
 <script lang="ts">
     import { onMount } from 'svelte';
 
+    let userAccessToken = '';
+
     let todos: Array<{text: string, completed: boolean}> = [];
     let text = '';
     let loading = true;
@@ -8,7 +10,7 @@
 
     onMount(async () => {
 
-       window.addEventListener('message', event => {
+       window.addEventListener('message', async event => {
            const message = event.data;
            console.log({message});
            switch (message.type) {
@@ -21,17 +23,20 @@
                           }, ...todos
                      ];
                    break;
+                case 'user-authenticated':
+                    console.log(`token ${message.value}`);
+                    const response = await fetch(`${apiBaseUrl}/me`, {
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`
+                            }
+                    });
+                    const data = await response.json();
+                    user = data.user;
+                    loading = false;
+                    break;
            }
        });
-
-       const response = await fetch(`${apiBaseUrl}/me`, {
-              headers: {
-                'Authorization': `Bearer ${accessToken}`
-              }
-       });
-       const data = await response.json();
-       user = data.user;
-       loading = false;
+       
     });
 
 </script>
@@ -42,9 +47,24 @@
     }
 </style>
 {#if loading}
-    <div>loading...</div>
+    <button 
+        on:click={() => {
+            tsvscode.postMessage({
+                type: 'doGitHubLogin',
+                value: 'doGitHubLogin'
+            });
+        }}
+    >GitHub Login</button>
 {:else if user}
-    <pre>{JSON.stringify(user, null, 2)}</pre>
+    <div>User: [{user.name}]</div>
+    <button
+        on:click={() => {
+            tsvscode.postMessage({
+                type: 'doLogout',
+                value: 'doLogout'
+            });
+        }}
+    >Logoff</button>
 {:else}
     <div>no user is logged in</div>
 {/if}

@@ -12,4 +12,8 @@ export class TokenManager {
   static getToken(): string | undefined {
     return this.globalState.get(KEY);
   }
+
+  static deleteToken(){
+    return this.globalState.update(KEY, '');
+  }
 }
