@@ -51,11 +51,13 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage(
         "Token value is " + TokenManager.getToken()
       );
-      authenticate();
-      sidebarProvider._view?.webview.postMessage({
-        type: "user-authenticated",
-        value: TokenManager.getToken(),
-      });
+      authenticate(()=>{
+        sidebarProvider._view?.webview.postMessage({
+          type: "token",
+          value: TokenManager.getToken(),
+        });
+      });      
+      
     })
   );
 

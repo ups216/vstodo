@@ -3,7 +3,7 @@ import { apiBaseUrl } from "./constants";
 import * as polka from "polka";
 import { TokenManager } from "./TokenManager";
 
-export const authenticate = () => {
+export const authenticate = (fn:()=>void) => {
   const app = polka();
   app.get(`/auth/:token`, async (req, res) => {
     const { token } = req.params;
@@ -15,8 +15,11 @@ export const authenticate = () => {
     vscode.window.showInformationMessage(
       "Token value is " + TokenManager.getToken()
     );
+    fn();
+
     res.end("<h1>auth was successful, close this windows now</h1>");
 
+    app.server?.removeAllListeners();
     (app as any).server?.close;
   });
 

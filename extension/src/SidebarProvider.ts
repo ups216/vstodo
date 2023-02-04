@@ -24,14 +24,22 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
-        case 'doLogout': {
+        case 'logout':{
           TokenManager.deleteToken();
           break;
         }
-        case 'doGitHubLogin': {
-          authenticate();
+        case 'authenticate':{
+          authenticate(()=>{
+            webviewView.webview.postMessage({
+              type: "token",
+              value: TokenManager.getToken(),
+            });
+          });
+          break;
+        }
+        case 'get-token': {
           webviewView.webview.postMessage({
-            type: "user-authenticated",
+            type: "token",
             value: TokenManager.getToken(),
           });
           break;          
@@ -93,7 +101,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         <script nonce="${nonce}">
           const tsvscode = acquireVsCodeApi();
           const apiBaseUrl = ${JSON.stringify(apiBaseUrl)}
-          const accessToken = ${JSON.stringify(TokenManager.getToken())}
         </script>
 			</head>
       <body>

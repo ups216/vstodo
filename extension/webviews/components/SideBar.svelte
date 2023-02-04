@@ -1,12 +1,11 @@
 <script lang="ts">
     import { onMount } from 'svelte';
+    import type { User } from '../types';
+    import Todos from './Todos.svelte';
 
-    let userAccessToken = '';
-
-    let todos: Array<{text: string, completed: boolean}> = [];
-    let text = '';
+    let accessToken = '';    
     let loading = true;
-    let user: {name:string; id: number} | null = null;
+    let user: User | null = null;
 
     onMount(async () => {
 
@@ -14,17 +13,9 @@
            const message = event.data;
            console.log({message});
            switch (message.type) {
-               case 'new-todo':
-                   console.log(message.value);
-                   todos = [
-                          {
-                            text: message.value,
-                            completed: false
-                          }, ...todos
-                     ];
-                   break;
-                case 'user-authenticated':
+                case 'token':
                     console.log(`token ${message.value}`);
+                    accessToken = message.value;
                     const response = await fetch(`${apiBaseUrl}/me`, {
                             headers: {
                                 'Authorization': `Bearer ${accessToken}`
@@ -36,71 +27,23 @@
                     break;
            }
        });
+
+       tsvscode.postMessage({type: "get-token", value: undefined});
        
     });
 
 </script>
-
-<style>
-    .complete {
-        text-decoration: line-through;
-    }
-</style>
 {#if loading}
-    <button 
-        on:click={() => {
-            tsvscode.postMessage({
-                type: 'doGitHubLogin',
-                value: 'doGitHubLogin'
-            });
-        }}
-    >GitHub Login</button>
+    <div>loading ...</div>
 {:else if user}
-    <div>User: [{user.name}]</div>
-    <button
-        on:click={() => {
-            tsvscode.postMessage({
-                type: 'doLogout',
-                value: 'doLogout'
-            });
-        }}
-    >Logoff</button>
+    <Todos user = {user} />
+    <button on:click={()=>{
+        accessToken = '';
+        user = null;
+        tsvscode.postMessage({type: "logout", value: undefined});
+    }}>logout</button>
 {:else}
-    <div>no user is logged in</div>
+    <button on:click={()=>{
+        tsvscode.postMessage({type: 'authenticate', value:undefined});
+    }}>Login with GitHub</button>
 {/if}
-
-<form on:submit|preventDefault={() => {
-    todos = [{text, completed: false},...todos];
-    text = '';
-}}>
-    <input bind:value={text} />
-</form>
-
-<ul>
-    {#each todos as todo (todo.text)}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <li 
-        class:complete={todo.completed}
-        on:click={ () => {
-            todo.completed = !todo.completed;
-        }}>{todo.text}</li>
-    {/each}
-</ul>
-
-<button 
-    on:click={() => {
-        tsvscode.postMessage({
-            type: 'onInfo',
-            value: 'INFO Message'
-        });
-    }}
->click me</button>
-
-<button 
-    on:click={() => {
-        tsvscode.postMessage({
-            type: 'onError',
-            value: 'INFO Message'
-        });
-    }}
->click me for error</button>
