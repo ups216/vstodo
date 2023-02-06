@@ -9,6 +9,8 @@ import { Strategy as GitHubStrategy } from "passport-github";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import cors from "cors";
+import { Todo } from "./entities/Todo";
+import { isAuth } from "./isAuth";
 
 const main = async () => {
   await createConnection({
@@ -32,6 +34,7 @@ const main = async () => {
   });
   app.use(cors({ origin: "*" }));
   app.use(passport.initialize());
+  app.use(express.json());
 
   passport.use(
     new GitHubStrategy(
@@ -62,8 +65,7 @@ const main = async () => {
 
   app.get("/auth/github", passport.authenticate("github", { session: false }));
 
-  app.get(
-    "/auth/github/callback",
+  app.get("/auth/github/callback",
     passport.authenticate("github", {
       failureRedirect: "/login",
       session: false,
@@ -74,6 +76,34 @@ const main = async () => {
       res.redirect(`http://localhost:54321/auth/${req.user.accessToken}`);
     }
   );
+
+  app.put("/todo", isAuth, async (req, res) => {
+    const todo = await Todo.findOne(req.body.id);
+    if (!todo) {
+      res.send({todo: null});
+      return;
+    }
+    if (todo.creatorId !== req.userId) {
+      throw new Error("not authorized");
+    }
+    todo.completed = req.body.completed;
+    todo.save();
+    res.send({todo});
+  });
+
+  app.get("/todo", isAuth, async (req, res) => {
+    const todos = await Todo.find({ where: { creatorId: req.userId } });
+    res.send({ todos });
+  });
+
+  app.post("/todo", isAuth, async (req, res) => { 
+    const todo = await Todo.create({
+      text: req.body.text, 
+      creatorId: req.userId,
+    }).save();
+    console.log(`todo ${todo}`);
+    res.send({todo});
+  });
 
   app.get("/me", async (req, res) => {
     const authHeader = req.headers.authorization;
@@ -116,6 +146,7 @@ const main = async () => {
   app.get("/", (_req, res) => {
     res.send("hello");
   });
+
   app.listen(3002, () => {
     console.log("Server started on port 3002");
   });

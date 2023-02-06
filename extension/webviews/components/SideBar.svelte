@@ -7,6 +7,12 @@
     let loading = true;
     let user: User | null = null;
 
+    let page : "todos" | "settings" = tsvscode.getState()?.page || "todos";
+
+    $: {
+        tsvscode.setState({page});
+    }
+
     onMount(async () => {
 
        window.addEventListener('message', async event => {
@@ -18,7 +24,8 @@
                     accessToken = message.value;
                     const response = await fetch(`${apiBaseUrl}/me`, {
                             headers: {
-                                'Authorization': `Bearer ${accessToken}`
+                                'Content-Type': 'application/json',
+                                authorization: `Bearer ${accessToken}`
                             }
                     });
                     const data = await response.json();
@@ -36,7 +43,21 @@
 {#if loading}
     <div>loading ...</div>
 {:else if user}
-    <Todos user = {user} />
+    {#if page === "todos"}
+        <Todos user = {user} accessToken= {accessToken} />
+        <button on:click={()=>{page = "settings"}}>settings</button>
+    {:else}
+        <div>settings</div>
+        <div>
+            <p>
+                Author: Lei Xu <br/>
+                Contact: leixu@leansoftx.com <br/>
+                Copyright: <a href="https://leansoftx.com">leansoftX.com</a>
+            </p>
+        </div>
+        <button on:click={()=>{page = "todos"}}>todo</button>
+    {/if}
+    
     <button on:click={()=>{
         accessToken = '';
         user = null;
