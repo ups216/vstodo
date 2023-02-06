@@ -1,8 +1,9 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-  import type { User } from '../types';
+    import type { User } from '../types';
 
     export let user: User;
+    export let accessToken: string;
 
     let todos: Array<{text: string, completed: boolean}> = [];
     let text = '';
@@ -25,6 +26,16 @@
             }
         });
 
+        const response = await fetch(`${apiBaseUrl}/todo`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: `Bearer ${accessToken}`
+            }
+        });
+        const payload = await response.json();
+        todos = payload.todos;
+
 });
 </script>
 <style>
@@ -35,8 +46,20 @@
 
 <div>Hello: {user.name}</div>
 
-<form on:submit|preventDefault={() => {
-    todos = [{text, completed: false},...todos];
+<form on:submit|preventDefault={ async () => {
+
+    const response = await fetch(`${apiBaseUrl}/todo`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+            text: text
+        })
+    });
+
+    todos = [{text, completed: false},...todos];   
     text = '';
 }}>
     <input bind:value={text} />

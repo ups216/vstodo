@@ -18,7 +18,8 @@
                     accessToken = message.value;
                     const response = await fetch(`${apiBaseUrl}/me`, {
                             headers: {
-                                'Authorization': `Bearer ${accessToken}`
+                                'Content-Type': 'application/json',
+                                authorization: `Bearer ${accessToken}`
                             }
                     });
                     const data = await response.json();
@@ -36,7 +37,7 @@
 {#if loading}
     <div>loading ...</div>
 {:else if user}
-    <Todos user = {user} />
+    <Todos user = {user} accessToken= {accessToken} />
     <button on:click={()=>{
         accessToken = '';
         user = null;
