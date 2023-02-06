@@ -1,4 +1,4 @@
-# VSTodo - A fully featured VSCode Extension
+# VSTodo - A fully featured VSCode Extension Sample
 
 The purpose of this extension is to act as sample code or starting point for developing a VSCode Extension.
 
