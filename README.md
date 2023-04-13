@@ -35,6 +35,14 @@ VSTodo includes the following components:
 
 Follow the steps below to setup the development environment:
 
+Run a PostgreSQL database in a docker container and pgAdmin in another docker container:
+
+```shell
+docker-compose up -d
+```
+
+```shell
+
 > Note:
 > Create a `api/.env` file and follow the format of `api/.env.example` to setup the environment variables.
 
