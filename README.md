@@ -9,7 +9,6 @@ graph TD
     B --> D[接好电源]
     C --> E[更换灯泡]
     E --> F[修理电灯]
-
 ```
 
 ## Overview
