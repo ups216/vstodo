@@ -2,6 +2,18 @@
 
 The purpose of this extension is to act as sample code or starting point for developing a VSCode Extension.
 
+```mermaid
+graph LR
+  A[orch/chat] -->|Get Model| B[core/model/get by model_key]
+  C[orch/code-completion] -->|Get Model| B
+  B --> D[core/model/short-list]
+  B -->|multi-instance Policy| E[Model {useInstance=true}]
+  E --> F[Model Instance {configuration_items}]
+  E --> G[Model Instance {configuration_items}]
+  E --> H[Model Instance {configuration_items}]
+  E --> I[Model Instance {configuration_items}]
+```
+
 ## Overview
 
 This is just a simple Todo List Manager that you can add a list of todo items and strick-through the one is `completed`. The extension require you to `login with Github` before you can start adding your todo list and it will use a PostgreSQL database to store your todo list. There is also an `API server` runing behind.
