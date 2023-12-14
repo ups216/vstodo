@@ -3,15 +3,13 @@
 The purpose of this extension is to act as sample code or starting point for developing a VSCode Extension.
 
 ```mermaid
-graph LR
-  A[orch/chat] -->|Get Model| B[core/model/get by model_key]
-  C[orch/code-completion] -->|Get Model| B
-  B --> D[core/model/short-list]
-  B -->|multi-instance Policy| E[Model {useInstance=true}]
-  E --> F[Model Instance {configuration_items}]
-  E --> G[Model Instance {configuration_items}]
-  E --> H[Model Instance {configuration_items}]
-  E --> I[Model Instance {configuration_items}]
+graph TD
+    A[电灯不工作了] -->|电源接好了吗？| B{是}
+    A -->|电源接好了吗？| C{否}
+    B --> D[接好电源]
+    C --> E[更换灯泡]
+    E --> F[修理电灯]
+
 ```
 
 ## Overview
